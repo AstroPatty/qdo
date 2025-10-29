@@ -1,13 +1,14 @@
-use clap::error::{Error, ErrorKind};
-use clap::{Command, CommandFactory, Parser};
+use clap::Parser;
 use std::process;
 
 use cli::Cli;
 
 mod cli;
 mod dispatch;
+mod job;
 mod submit;
 mod template;
+
 fn main() {
     let args = Cli::parse();
     let result = dispatch::dispatch(&args);

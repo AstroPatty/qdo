@@ -3,7 +3,7 @@ use crate::template::resolve_template;
 use std::fs::File;
 use std::io::{Error, Result};
 use std::path::Path;
-use tera::{Context, Tera};
+use tera::Context;
 
 pub(crate) fn submit(args: &SubmitArgs, job_id: usize, job_dir: &Path) -> Result<()> {
     let tera = resolve_template(&args.template)?;

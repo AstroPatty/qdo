@@ -3,7 +3,6 @@ use crate::cli::Command;
 use crate::submit::submit;
 use std::env::current_dir;
 use std::io::Result;
-use std::path::Path;
 
 pub(crate) fn dispatch(args: &Cli) -> Result<()> {
     match &args.command {

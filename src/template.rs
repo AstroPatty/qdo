@@ -1,4 +1,3 @@
-use std::fs::File;
 use std::io::{Error, ErrorKind, Result};
 use std::path::Path;
 use tera::ErrorKind as TErrorKind;
