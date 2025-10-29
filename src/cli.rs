@@ -1,23 +1,24 @@
 use clap::{ArgAction, Parser, Subcommand};
 use std::io::{Error, Result};
+use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 pub(crate) struct Cli {
     #[command(subcommand)]
-    command: Command,
+    pub(crate) command: Command,
 }
 
 #[derive(Subcommand, Debug)]
-enum Command {
+pub(crate) enum Command {
     Submit(SubmitArgs),
 }
 
 #[derive(Parser, Debug)]
-struct SubmitArgs {
-    template: String,
+pub(crate) struct SubmitArgs {
+    pub(crate) template: PathBuf,
     #[arg(short, long, value_parser=parse_key_val, action = ArgAction::Append)]
-    context: Vec<(String, String)>,
+    pub(crate) context: Vec<(String, String)>,
 }
 
 fn parse_key_val(data: &str) -> Result<(String, String)> {
