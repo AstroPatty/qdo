@@ -1,5 +1,5 @@
+use anyhow::{Result, anyhow};
 use clap::{ArgAction, Parser, Subcommand};
-use std::io::{Error, Result};
 use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
@@ -27,6 +27,9 @@ fn parse_key_val(data: &str) -> Result<(String, String)> {
         let (k, v) = data.split_at(i);
         Ok((k.to_owned(), v[1..].to_owned()))
     } else {
-        Err(Error::other(format!("Expected a key-value pair")))
+        Err(anyhow!(format!(
+            "Context should be passed in format `key=vale`, recieved {}",
+            data
+        )))
     }
 }

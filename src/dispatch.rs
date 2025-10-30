@@ -1,8 +1,8 @@
 use crate::cli::Cli;
 use crate::cli::Command;
 use crate::submit::submit;
+use anyhow::Result;
 use std::env::current_dir;
-use std::io::Result;
 
 pub(crate) fn dispatch(args: &Cli) -> Result<()> {
     match &args.command {

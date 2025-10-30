@@ -1,7 +1,7 @@
 use crate::cli::SubmitArgs;
 use crate::template::resolve_template;
+use anyhow::{Result, anyhow};
 use std::fs::File;
-use std::io::{Error, Result};
 use std::path::Path;
 use tera::Context;
 
@@ -16,7 +16,7 @@ pub(crate) fn submit(args: &SubmitArgs, job_id: usize, job_dir: &Path) -> Result
     let output = File::create_new(&script_path)?;
     let result = tera.render_to(args.template.to_str().unwrap(), &context, output);
     if let Err(error) = result {
-        return Err(Error::other(format!("{}", error)));
+        return Err(anyhow!(error));
     }
 
     return Ok(());
