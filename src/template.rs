@@ -1,4 +1,4 @@
-use anyhow::{Result, anyhow};
+use anyhow::{anyhow, Result};
 use std::path::Path;
 use tera::ErrorKind as TErrorKind;
 use tera::Tera;

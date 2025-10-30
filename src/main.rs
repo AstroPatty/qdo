@@ -8,6 +8,7 @@ mod dispatch;
 mod job;
 mod submit;
 mod template;
+mod template_store;
 
 fn main() {
     let args = Cli::parse();

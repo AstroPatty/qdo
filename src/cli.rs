@@ -28,7 +28,7 @@ fn parse_key_val(data: &str) -> Result<(String, String)> {
         Ok((k.to_owned(), v[1..].to_owned()))
     } else {
         Err(anyhow!(format!(
-            "Context should be passed in format `key=vale`, recieved {}",
+            "Context should be passed in format `key=value`, recieved {}",
             data
         )))
     }

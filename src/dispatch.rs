@@ -8,7 +8,7 @@ pub(crate) fn dispatch(args: &Cli) -> Result<()> {
     match &args.command {
         Command::Submit(args) => {
             let path = current_dir().unwrap();
-            submit(&args, 0, &path)
+            submit(&args, &path)
         }
     }
 }
