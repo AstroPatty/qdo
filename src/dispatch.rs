@@ -1,3 +1,4 @@
+use crate::add::add_template;
 use crate::cli::Cli;
 use crate::cli::Command;
 use crate::submit::submit;
@@ -10,5 +11,6 @@ pub(crate) fn dispatch(args: &Cli) -> Result<()> {
             let path = current_dir().unwrap();
             submit(&args, &path)
         }
+        Command::Add(args) => add_template(&args),
     }
 }

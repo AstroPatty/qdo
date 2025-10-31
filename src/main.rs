@@ -3,6 +3,7 @@ use std::process;
 
 use cli::Cli;
 
+mod add;
 mod cli;
 mod dispatch;
 mod job;

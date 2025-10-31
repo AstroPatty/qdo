@@ -1,24 +1,16 @@
-use anyhow::{anyhow, Result};
-use std::path::Path;
+use crate::template_store::TemplateStore;
+use anyhow::{Result, anyhow};
+
 use tera::ErrorKind as TErrorKind;
 use tera::Tera;
 
-pub(crate) fn resolve_template(path: &Path) -> Result<Tera> {
-    if !path.exists() {
-        return Err(anyhow!(format!("File not found: {:?}", path)));
-    }
+pub(crate) fn resolve_template(name: &str) -> Result<Tera> {
+    let template_store = TemplateStore::open_template_store()?;
+    let template = template_store
+        .get_template(name)?
+        .ok_or(anyhow!("Couldn't find a template named {}", name))?;
 
     let mut tera = Tera::default();
-    let result = tera.add_template_file(path, None);
-    if let Err(error) = result {
-        match error.kind {
-            TErrorKind::Io(_) => {
-                return Err(anyhow!(format!("Unable to read template!: {}", error)));
-            }
-            _ => {
-                return Err(anyhow!(format!("Unable to parse template!: {}", error)));
-            }
-        }
-    }
+    tera.add_raw_template(name, &template)?;
     Ok(tera)
 }

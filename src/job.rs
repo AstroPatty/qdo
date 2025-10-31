@@ -1,4 +1,5 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
+use std::error::Error;
 use std::fs::File;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -65,6 +66,10 @@ impl Job {
 
         let write_result = tera.render_to(&self.template_name, &self.context, output_file);
         if let Err(error) = write_result {
+            if let Some(source) = error.source() {
+                return Err(anyhow!(format!("Error rendering job script: {}", source)));
+            }
+
             return Err(anyhow!(format!("Error rendering job script: {}", error)));
         }
 

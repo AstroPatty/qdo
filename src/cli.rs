@@ -12,13 +12,22 @@ pub(crate) struct Cli {
 #[derive(Subcommand, Debug)]
 pub(crate) enum Command {
     Submit(SubmitArgs),
+    Add(AddArgs),
 }
 
 #[derive(Parser, Debug)]
 pub(crate) struct SubmitArgs {
-    pub(crate) template: PathBuf,
+    pub(crate) template: String,
     #[arg(short, long, value_parser=parse_key_val, action = ArgAction::Append)]
     pub(crate) context: Vec<(String, String)>,
+}
+
+#[derive(Parser, Debug)]
+pub(crate) struct AddArgs {
+    pub(crate) name: String,
+    pub(crate) template_path: PathBuf,
+    #[arg(short, help = "Overwrite an existing template")]
+    pub(crate) overwrite: bool,
 }
 
 fn parse_key_val(data: &str) -> Result<(String, String)> {

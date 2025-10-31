@@ -24,7 +24,7 @@ impl TemplateStore {
         Ok(TemplateStore { db })
     }
 
-    fn get_template(&mut self, template_name: &str) -> Result<Option<String>> {
+    pub(crate) fn get_template(&self, template_name: &str) -> Result<Option<String>> {
         let data = self.db.get(template_name)?;
         if let Some(d) = data {
             return from_utf8(&d)
@@ -33,7 +33,7 @@ impl TemplateStore {
         Ok(None)
     }
 
-    pub(crate) fn try_add_template(&mut self, template_name: &str, template: String) -> Result<()> {
+    pub(crate) fn try_add_template(&mut self, template_name: &str, template: &[u8]) -> Result<()> {
         // Fails if the template already exists
         if self.db.contains_key(template_name)? {
             return Err(anyhow!(format!(
@@ -44,10 +44,10 @@ impl TemplateStore {
         self.add_template(template_name, template)
     }
 
-    pub(crate) fn add_template(&mut self, template_name: &str, template: String) -> Result<()> {
+    pub(crate) fn add_template(&mut self, template_name: &str, template: &[u8]) -> Result<()> {
         let _ = self
             .db
-            .insert(&template_name, template.into_bytes())
+            .insert(&template_name, template)
             .map_err(|err| anyhow!(err))?;
         Ok(())
     }
