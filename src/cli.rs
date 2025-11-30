@@ -1,6 +1,11 @@
-use anyhow::{Result, anyhow};
-use clap::{ArgAction, Parser, Subcommand};
-use std::path::PathBuf;
+use crate::Runnable;
+use crate::add::AddArgs;
+use crate::create::CreateArgs;
+use crate::submit::SubmitArgs;
+use anyhow::{Ok, Result};
+use clap::{Parser, Subcommand};
+use sled::Db;
+use std::rc::Rc;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -13,32 +18,17 @@ pub(crate) struct Cli {
 pub(crate) enum Command {
     Submit(SubmitArgs),
     Add(AddArgs),
+    Create(CreateArgs),
+    List,
 }
 
-#[derive(Parser, Debug)]
-pub(crate) struct SubmitArgs {
-    pub(crate) template: String,
-    #[arg(short, long, value_parser=parse_key_val, action = ArgAction::Append)]
-    pub(crate) context: Vec<(String, String)>,
-}
-
-#[derive(Parser, Debug)]
-pub(crate) struct AddArgs {
-    pub(crate) name: String,
-    pub(crate) template_path: PathBuf,
-    #[arg(short, help = "Overwrite an existing template")]
-    pub(crate) overwrite: bool,
-}
-
-fn parse_key_val(data: &str) -> Result<(String, String)> {
-    let pos = data.find('=');
-    if let Some(i) = pos {
-        let (k, v) = data.split_at(i);
-        Ok((k.to_owned(), v[1..].to_owned()))
-    } else {
-        Err(anyhow!(format!(
-            "Context should be passed in format `key=value`, recieved {}",
-            data
-        )))
+impl Runnable for Command {
+    fn run(&self, db: Rc<Db>) -> Result<String> {
+        match self {
+            Command::Submit(args) => todo!(),
+            Command::Add(args) => args.run(db),
+            Command::Create(args) => args.create(db),
+            Command::List => Ok(String::from("list")),
+        }
     }
 }

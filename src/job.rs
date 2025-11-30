@@ -21,6 +21,8 @@ pub(crate) struct Job {
 
     // the template context
     context: Context,
+
+    project: String,
 }
 
 impl Job {
@@ -28,6 +30,7 @@ impl Job {
         working_directory: &Path,
         template_name: &str,
         context: &Vec<(String, String)>,
+        project_name: &str,
     ) -> Self {
         let mut context_output = Context::new();
         let time = SystemTime::now();
@@ -41,6 +44,7 @@ impl Job {
             time: SystemTime::now(),
             template_name: template_name.to_string(),
             context: context_output,
+            project: project_name.to_owned(),
         };
     }
 
