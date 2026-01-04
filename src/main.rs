@@ -1,24 +1,11 @@
-use anyhow::Result;
-use clap::Parser;
-use sled::Db;
-use std::process;
-use std::rc::Rc;
+use sled;
 
-use cli::Cli;
-
-mod add;
-mod cli;
-mod create;
+mod allocation;
 mod db;
-mod job;
-mod project;
-mod submit;
-mod template;
-mod template_store;
-
-pub(crate) trait Runnable {
-    fn run(&self, db: Rc<Db>) -> Result<String>;
-}
+mod directory;
+use anyhow::Result;
+use dirs::home_dir;
+use std::process;
 
 fn handle_result<T>(result: Result<T>) -> T {
     if let Err(error) = result {
@@ -27,15 +14,10 @@ fn handle_result<T>(result: Result<T>) -> T {
     }
     result.unwrap()
 }
-
-fn run(runnable: &impl Runnable, db: Rc<Db>) -> () {
-    let result = runnable.run(db);
-    let msg = handle_result::<String>(result);
-    println!("{}", msg);
-}
-
 fn main() {
-    let database = handle_result(db::get_database());
-    let args = Cli::parse();
-    run(&args.command, database);
+    let qdo_db = handle_result(db::open_db());
+    let root_path = home_dir().unwrap();
+    handle_result(qdo_db.add_allocation(root_path, "root"));
+    let allocation_names = qdo_db.allocations();
+    println!("{:?}", allocation_names);
 }
